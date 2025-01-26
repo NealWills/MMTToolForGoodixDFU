@@ -1,0 +1,5 @@
+ extern const unsigned char CwlPreconditionTestingVersionString[];
+ extern const double CwlPreconditionTestingVersionNumber;
+
+ const unsigned char CwlPreconditionTestingVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:CwlPreconditionTesting  PROJECT:Pods-1" "\n";
+ const double CwlPreconditionTestingVersionNumber __attribute__ ((used)) = (double)1.;

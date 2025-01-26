@@ -1,0 +1,10 @@
+framework module MMTToolForGoodixDFU {
+  umbrella header "MMTToolForGoodixDFU-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module MMTToolForGoodixDFU.__Swift {
+  exclude header "MMTToolForGoodixDFU-Swift.h"
+}

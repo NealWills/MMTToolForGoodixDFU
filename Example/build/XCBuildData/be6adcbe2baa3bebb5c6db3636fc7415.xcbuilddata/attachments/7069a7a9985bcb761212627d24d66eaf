@@ -1,0 +1,185 @@
+{
+  "" : {
+    "const-values" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Quick-master.swiftconstvalues",
+    "dependencies" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Quick-master.d",
+    "diagnostics" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Quick-master.dia",
+    "emit-module-dependencies" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Quick-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Quick-master-emit-module.dia",
+    "swift-dependencies" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Quick-master.swiftdeps"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Async/AsyncBehavior.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncBehavior.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncBehavior.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncBehavior.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Async/AsyncExampleGroup.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExampleGroup.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExampleGroup.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExampleGroup.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Async/AsyncSpec.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncSpec.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncSpec.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncSpec.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Async/AsyncWorld.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncWorld.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncWorld.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncWorld.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Behavior.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Behavior.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Behavior.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Behavior.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Callsite.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Callsite.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Callsite.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Callsite.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Configuration/QCKConfiguration.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QCKConfiguration.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QCKConfiguration.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QCKConfiguration.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Configuration/QuickConfiguration.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickConfiguration-877913f28a6d3197ab21b624579f48c4.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickConfiguration-877913f28a6d3197ab21b624579f48c4.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickConfiguration-877913f28a6d3197ab21b624579f48c4.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/CurrentSpec.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/CurrentSpec.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/CurrentSpec.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/CurrentSpec.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/DSL/AsyncDSL.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncDSL.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncDSL.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncDSL.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/DSL/AsyncWorld+DSL.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncWorld+DSL.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncWorld+DSL.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncWorld+DSL.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/DSL/DSL.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/DSL.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/DSL.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/DSL.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/DSL/World+DSL.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/World+DSL.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/World+DSL.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/World+DSL.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/ErrorUtility.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ErrorUtility.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ErrorUtility.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ErrorUtility.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/ExampleGroup.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleGroup.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleGroup.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleGroup.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Examples/AsyncExample.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExample.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExample.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExample.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Examples/Example.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Example.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Example.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Example.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Examples/ExampleMetadata.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleMetadata.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleMetadata.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleMetadata.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Filter.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Filter.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Filter.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Filter.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Hooks/AsyncExampleHooks.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExampleHooks.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExampleHooks.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/AsyncExampleHooks.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Hooks/Closures.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Closures.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Closures.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/Closures.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Hooks/ExampleHooks.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleHooks.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleHooks.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/ExampleHooks.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Hooks/HooksPhase.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/HooksPhase.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/HooksPhase.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/HooksPhase.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/Hooks/SuiteHooks.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/SuiteHooks.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/SuiteHooks.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/SuiteHooks.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/NSBundle+CurrentTestBundle.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/NSBundle+CurrentTestBundle.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/NSBundle+CurrentTestBundle.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/NSBundle+CurrentTestBundle.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/QuickSelectedTestSuiteBuilder.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickSelectedTestSuiteBuilder.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickSelectedTestSuiteBuilder.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickSelectedTestSuiteBuilder.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/QuickTestObservation.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickTestObservation.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickTestObservation.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickTestObservation.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/QuickTestSuite.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickTestSuite.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickTestSuite.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/QuickTestSuite.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/StopTest.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/StopTest.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/StopTest.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/StopTest.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/String+C99ExtendedIdentifier.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/String+C99ExtendedIdentifier.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/String+C99ExtendedIdentifier.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/String+C99ExtendedIdentifier.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/SubclassDetection.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/SubclassDetection.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/SubclassDetection.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/SubclassDetection.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/TestSelectorNameProvider.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/TestSelectorNameProvider.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/TestSelectorNameProvider.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/TestSelectorNameProvider.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/TestState.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/TestState.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/TestState.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/TestState.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/URL+FileName.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/URL+FileName.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/URL+FileName.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/URL+FileName.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/Quick/Sources/Quick/World.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/World.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/World.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/Quick.build/Objects-normal/arm64/World.o"
+  }
+}

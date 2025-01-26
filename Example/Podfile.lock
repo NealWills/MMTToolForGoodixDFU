@@ -38,7 +38,7 @@ SPEC CHECKSUMS:
   CwlMachBadInstructionHandler: dae4fdd124d45c9910ac240287cc7b898f4502a1
   CwlPosixPreconditionTesting: ecd095aa2129e740b44301c34571e8d85906fb88
   CwlPreconditionTesting: 67a0047dd4de4382b93442c0e3f25207f984f35a
-  MMTToolForGoodixDFU: 9317fd14b794999db12db6278125437d0f079f64
+  MMTToolForGoodixDFU: ab4b6ea25caa0d81e13b61f599a2ba30cbb8b983
   Nimble: 317d713c30c3336dd8571da1889f7ec3afc626e8
   Quick: b8bec97cd4b9f21da0472d45580f763b801fc353
 

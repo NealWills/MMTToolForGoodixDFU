@@ -1,0 +1,25 @@
+Target dependency graph (10 targets)
+Target 'Pods-MMTToolForGoodixDFU_Tests' in project 'Pods'
+➜ Explicit dependency on target 'CwlCatchException' in project 'Pods'
+➜ Explicit dependency on target 'CwlCatchExceptionSupport' in project 'Pods'
+➜ Explicit dependency on target 'CwlMachBadInstructionHandler' in project 'Pods'
+➜ Explicit dependency on target 'CwlPosixPreconditionTesting' in project 'Pods'
+➜ Explicit dependency on target 'CwlPreconditionTesting' in project 'Pods'
+➜ Explicit dependency on target 'Nimble' in project 'Pods'
+➜ Explicit dependency on target 'Pods-MMTToolForGoodixDFU_Example' in project 'Pods'
+➜ Explicit dependency on target 'Quick' in project 'Pods'
+Target 'Quick' in project 'Pods' (no dependencies)
+Target 'Pods-MMTToolForGoodixDFU_Example' in project 'Pods'
+➜ Explicit dependency on target 'MMTToolForGoodixDFU' in project 'Pods'
+Target 'Nimble' in project 'Pods'
+➜ Explicit dependency on target 'CwlPreconditionTesting' in project 'Pods'
+Target 'MMTToolForGoodixDFU' in project 'Pods' (no dependencies)
+Target 'CwlPreconditionTesting' in project 'Pods'
+➜ Explicit dependency on target 'CwlCatchException' in project 'Pods'
+➜ Explicit dependency on target 'CwlMachBadInstructionHandler' in project 'Pods'
+➜ Explicit dependency on target 'CwlPosixPreconditionTesting' in project 'Pods'
+Target 'CwlPosixPreconditionTesting' in project 'Pods' (no dependencies)
+Target 'CwlMachBadInstructionHandler' in project 'Pods' (no dependencies)
+Target 'CwlCatchException' in project 'Pods'
+➜ Explicit dependency on target 'CwlCatchExceptionSupport' in project 'Pods'
+Target 'CwlCatchExceptionSupport' in project 'Pods' (no dependencies)

@@ -1,0 +1,25 @@
+{
+  "" : {
+    "const-values" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlPreconditionTesting-master.swiftconstvalues",
+    "dependencies" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlPreconditionTesting-master.d",
+    "diagnostics" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlPreconditionTesting-master.dia",
+    "emit-module-dependencies" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlPreconditionTesting-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlPreconditionTesting-master-emit-module.dia",
+    "swift-dependencies" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlPreconditionTesting-master.swiftdeps"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlBadInstructionException.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlBadInstructionException.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlBadInstructionException.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlBadInstructionException.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlCatchBadInstruction.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlCatchBadInstruction.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlCatchBadInstruction.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlCatchBadInstruction.o"
+  },
+  "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/Pods/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlDarwinDefinitions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlDarwinDefinitions.o",
+    "llvm-bc" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlDarwinDefinitions.bc",
+    "object" : "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/Objects-normal/arm64/CwlDarwinDefinitions.o"
+  }
+}

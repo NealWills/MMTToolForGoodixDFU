@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Release-iphoneos/CwlPreconditionTesting/CwlPreconditionTesting.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Release-iphoneos/CwlPreconditionTesting/CwlPreconditionTesting.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "CwlPreconditionTesting-Swift.h",
+      'external-contents': "/Users/neal/Public/Github/MMTToolForGoodixDFU/MMTToolForGoodixDFU/Example/build/Pods.build/Release-iphoneos/CwlPreconditionTesting.build/unextended-interface-header.h",
+    }]
+    }]
+}

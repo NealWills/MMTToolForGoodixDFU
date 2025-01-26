@@ -1,0 +1,5 @@
+ extern const unsigned char MMTToolForGoodixDFUVersionString[];
+ extern const double MMTToolForGoodixDFUVersionNumber;
+
+ const unsigned char MMTToolForGoodixDFUVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:MMTToolForGoodixDFU  PROJECT:Pods-1" "\n";
+ const double MMTToolForGoodixDFUVersionNumber __attribute__ ((used)) = (double)1.;

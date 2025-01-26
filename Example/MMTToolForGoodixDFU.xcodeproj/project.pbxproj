@@ -46,7 +46,7 @@
 		8C2BA81F867EFAFDEE2D0283 /* Pods_MMTToolForGoodixDFU_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MMTToolForGoodixDFU_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECE2F21A3847A5D09B85913 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C5641C5537136318D2BCCD93 /* Pods-MMTToolForGoodixDFU_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MMTToolForGoodixDFU_Example.debug.xcconfig"; path = "Target Support Files/Pods-MMTToolForGoodixDFU_Example/Pods-MMTToolForGoodixDFU_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		E3C53C76C14758EF53F77020 /* MMTToolForGoodixDFU.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = MMTToolForGoodixDFU.podspec; path = ../MMTToolForGoodixDFU.podspec; sourceTree = "<group>"; };
+		E3C53C76C14758EF53F77020 /* MMTToolForGoodixDFU.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = MMTToolForGoodixDFU.podspec; path = ../MMTToolForGoodixDFU.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

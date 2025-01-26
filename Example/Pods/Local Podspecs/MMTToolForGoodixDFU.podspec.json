@@ -1,8 +1,8 @@
 {
   "name": "MMTToolForGoodixDFU",
   "version": "0.1.0",
-  "summary": "A short description of MMTToolForGoodixDFU.",
-  "description": "TODO: Add long description of the pod here.",
+  "summary": "MMT Tool For Goodix DFU.",
+  "description": "This is a custom tool for mmt to upgrade the firmware of the goodix chip.",
   "homepage": "https://github.com/NealWills/MMTToolForGoodixDFU",
   "license": {
     "type": "MIT",
