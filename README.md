@@ -1,3 +1,5 @@
+![Header Image](Resources/MMTToolForGoodixDFU.png)
+
 # MMTToolForGoodixDFU
 
 [![CI Status](https://img.shields.io/travis/NealWills/MMTToolForGoodixDFU.svg?style=flat)](https://travis-ci.org/NealWills/MMTToolForGoodixDFU)
@@ -6,8 +8,6 @@
 [![Platform](https://img.shields.io/cocoapods/p/MMTToolForGoodixDFU.svg?style=flat)](https://cocoapods.org/pods/MMTToolForGoodixDFU)
 
 ## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
 
