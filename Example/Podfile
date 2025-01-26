@@ -1,0 +1,28 @@
+use_frameworks!
+
+platform :ios, '13.0'
+
+inhibit_all_warnings!
+
+#  此处增加内容是为了解决 以下问题 xcode 15.2 跑之前创建的项目会产生这个问题
+#  Showing Recent Errors Only SDK does not contain 'libarclite' at the path '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/arc/libarclite_iphoneos.a'; try increasing the minimum deployment target
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "13.0"
+    end
+  end
+end
+
+
+target 'MMTToolForGoodixDFU_Example' do
+  pod 'MMTToolForGoodixDFU', :path => '../'
+
+  target 'MMTToolForGoodixDFU_Tests' do
+    inherit! :search_paths
+
+    pod 'Quick'
+    # 高性能三方测试语法
+    pod 'Nimble'
+  end
+end

@@ -1,0 +1,6 @@
+framework module MMTToolForGoodixDFU {
+  umbrella header "MMTToolForGoodixDFU-umbrella.h"
+
+  export *
+  module * { export * }
+}
