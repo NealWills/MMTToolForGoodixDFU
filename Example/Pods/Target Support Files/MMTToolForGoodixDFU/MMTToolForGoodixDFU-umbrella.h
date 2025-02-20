@@ -10,6 +10,8 @@
 #endif
 #endif
 
+#import "GRDfuSdk2.h"
+#import "libcomx.h"
 
 FOUNDATION_EXPORT double MMTToolForGoodixDFUVersionNumber;
 FOUNDATION_EXPORT const unsigned char MMTToolForGoodixDFUVersionString[];

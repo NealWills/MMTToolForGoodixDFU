@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MMTToolForGoodixDFU
+import MMTToolForBluetooth
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +18,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        MMTToolForGoodixDFUTool.configManager()
+        MMTToolForBleManager.configManager()
+        MMTToolForBleLog.config { msg, level, fileName, lineCount, functionName in
+            let sepFileName = fileName.description.components(separatedBy: "/").last ?? ""
+            let date = Date()
+            let formatter = DateFormatter()
+            formatter.timeZone = .autoupdatingCurrent
+            formatter.locale = Locale.current
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+            let dateStr = formatter.string(from: date)
+            print(
+                """
+                ======================
+                [\(level.strValue)] [\(dateStr)]
+                [\(sepFileName): \(lineCount)] -> \(functionName)
+                ----------------------
+                \(msg ?? "")
+                ======================
+                
+                """
+            )
+        }
+        
         return true
     }
 

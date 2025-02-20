@@ -18,5 +18,9 @@
   "platforms": {
     "ios": "13.0"
   },
-  "source_files": "MMTToolForGoodixDFU/Classes/**/*"
+  "source_files": "MMTToolForGoodixDFU/Classes/**/*",
+  "frameworks": "CoreBluetooth",
+  "dependencies": {
+    "MMTToolForBluetooth": []
+  }
 }

@@ -8,25 +8,42 @@ PODS:
     - CwlCatchException (~> 2.2.1)
     - CwlMachBadInstructionHandler (~> 2.2.2)
     - CwlPosixPreconditionTesting (~> 2.2.2)
-  - MMTToolForGoodixDFU (0.1.0)
+  - MMTToolForBluetooth (0.9.0)
+  - MMTToolForGoodixDFU (0.1.0):
+    - MMTToolForBluetooth
   - Nimble (13.7.1):
     - CwlPreconditionTesting (~> 2.2.0)
   - Quick (7.6.2)
+  - RxCocoa (6.9.0):
+    - RxRelay (= 6.9.0)
+    - RxSwift (= 6.9.0)
+  - RxRelay (6.9.0):
+    - RxSwift (= 6.9.0)
+  - RxSwift (6.9.0)
+  - SnapKit (5.7.1)
 
 DEPENDENCIES:
   - MMTToolForGoodixDFU (from `../`)
   - Nimble
   - Quick
+  - RxCocoa
+  - RxSwift
+  - SnapKit
 
 SPEC REPOS:
-  trunk:
+  https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
     - CwlCatchException
     - CwlCatchExceptionSupport
     - CwlMachBadInstructionHandler
     - CwlPosixPreconditionTesting
     - CwlPreconditionTesting
+    - MMTToolForBluetooth
     - Nimble
     - Quick
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - SnapKit
 
 EXTERNAL SOURCES:
   MMTToolForGoodixDFU:
@@ -38,10 +55,15 @@ SPEC CHECKSUMS:
   CwlMachBadInstructionHandler: dae4fdd124d45c9910ac240287cc7b898f4502a1
   CwlPosixPreconditionTesting: ecd095aa2129e740b44301c34571e8d85906fb88
   CwlPreconditionTesting: 67a0047dd4de4382b93442c0e3f25207f984f35a
-  MMTToolForGoodixDFU: ab4b6ea25caa0d81e13b61f599a2ba30cbb8b983
+  MMTToolForBluetooth: 0b28d7b1f56144c0b5fcf5eead200daab028b3fe
+  MMTToolForGoodixDFU: b9e9f75ede94a7003a035e21dea720ee4e1941e9
   Nimble: 317d713c30c3336dd8571da1889f7ec3afc626e8
   Quick: b8bec97cd4b9f21da0472d45580f763b801fc353
+  RxCocoa: ac16414696ae706516be3e1ab00fcce5bdc9be8a
+  RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
+  RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
+  SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
-PODFILE CHECKSUM: 57d2b8329353ad59c8cbfea6192f43059c370667
+PODFILE CHECKSUM: 588f323aa205fbd7a91b4294114324a51c7342fb
 
 COCOAPODS: 1.16.2

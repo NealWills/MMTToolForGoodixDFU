@@ -1,3 +1,5 @@
+source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
+
 use_frameworks!
 
 platform :ios, '13.0'
@@ -17,6 +19,11 @@ end
 
 target 'MMTToolForGoodixDFU_Example' do
   pod 'MMTToolForGoodixDFU', :path => '../'
+  
+  pod 'SnapKit'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'MMTToolForBluetooth', :git => 'https://github.com/NealWills/MMTToolForBluetooth.git'
 
   target 'MMTToolForGoodixDFU_Tests' do
     inherit! :search_paths
