@@ -81,7 +81,8 @@ class ViewController: UIViewController {
         let device = deviceList[indexPath.row]
         if device.connectStatus != .connected { return }
         let fileUrl = Bundle.main.path(forResource: "dfuFile_1_0_0_17.bin", ofType: "")
-        MMTToolForGoodixDFUTool.startDfu(device: device, startAddress: "01080000", filePath: fileUrl)
+        MMTToolForGoodixDFUTool.startDfu(deviceUUID: device.uuid, deviceMac: device.mac, deviceMacExtra: device.macExtra, peripheral: device.peripheral, startAddress: "01080000", filePath: fileUrl)
+//        MMTToolForGoodixDFUTool.startDfu(device: device, startAddress: "01080000", filePath: fileUrl)
     }
 
     override func didReceiveMemoryWarning() {
@@ -148,12 +149,13 @@ extension ViewController: MMTToolForGoodixDFUDelegate {
         print("[ViewController] mmtToolForGoodixUnitDFUDidBegin mac: \(unit?.deviceMac?.uppercased() ?? "")")
     }
     
-    func mmtToolForGoodixUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFU.MMTToolForGoodixDFUToolUnit?) {
-        print("[ViewController] mmtToolForGoodixUnitDFUDidChangeProgress mac: \(unit?.deviceMac?.uppercased() ?? "")")
+    func mmtToolForGoodixUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFU.MMTToolForGoodixDFUToolUnit?, progress: Int) {
+        print("[ViewController] mmtToolForGoodixUnitDFUDidChangeProgress mac: \(unit?.deviceMac?.uppercased() ?? "") progress: \(progress)")
     }
     
     func mmtToolForGoodixUnitDFUDidEnd(_ unit: MMTToolForGoodixDFU.MMTToolForGoodixDFUToolUnit?, error: (any Error)?) {
         print("[ViewController] mmtToolForGoodixUnitDFUDidEnd mac: \(unit?.deviceMac?.uppercased() ?? "") error: \(error)")
+        
     }
     
     func mmtToolForGoodixUnitGetUUID(_ unit: MMTToolForGoodixDFU.MMTToolForGoodixDFUToolUnit?) -> MMTToolForGoodixDFUDelegate.DFUServerTurple? {

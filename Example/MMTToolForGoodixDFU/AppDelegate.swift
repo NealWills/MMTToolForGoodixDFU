@@ -42,6 +42,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             )
         }
         
+        MMTToolForGoodixLog.config { msg, level, fileName, lineCount, functionName in
+            let sepFileName = fileName.description.components(separatedBy: "/").last ?? ""
+            let date = Date()
+            let formatter = DateFormatter()
+            formatter.timeZone = .autoupdatingCurrent
+            formatter.locale = Locale.current
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+            let dateStr = formatter.string(from: date)
+            print(
+                """
+                ======================
+                [\(level.strValue)] [\(dateStr)]
+                [\(sepFileName): \(lineCount)] -> \(functionName)
+                ----------------------
+                \(msg ?? "")
+                ======================
+                
+                """
+            )
+        }
+        
         return true
     }
 

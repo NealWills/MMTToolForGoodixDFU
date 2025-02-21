@@ -262,6 +262,7 @@
 		71C8EFE9EFD474180E7CD9AB15B45260 /* CwlMachBadInstructionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FA393E14E4152BDF3440CB56DB05E2 /* CwlMachBadInstructionHandler.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		71C92CF07B60A2AA545AB0809459D83C /* URL+FileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C48A7293436636DE1290EAA4C69D998 /* URL+FileName.swift */; };
 		72023D5E7AC5820565F341541E22C042 /* Do.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529447F2EFB3FF3BF6280996CE75CF7 /* Do.swift */; };
+		724AC5262D6816840051ACD3 /* MMTToolForGoodixLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 724AC5252D6816840051ACD3 /* MMTToolForGoodixLog.swift */; };
 		724FE57094C21D275A86567434E573CC /* UIApplication+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28C7C98E0A9F0F140515349DB3D00B4 /* UIApplication+Rx.swift */; };
 		7265CF1F2D673152008C7FBD /* MMTToolForGoodixDFUToolUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7265CF1E2D673152008C7FBD /* MMTToolForGoodixDFUToolUnit.swift */; };
 		7265CF212D6735A5008C7FBD /* MMTToolForGoodixDFUFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7265CF202D6735A5008C7FBD /* MMTToolForGoodixDFUFileManager.swift */; };
@@ -1012,6 +1013,7 @@
 		70A1DA1FA6A336CB2D3ACC53E08BEAA5 /* MMTToolForGoodixDFU-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MMTToolForGoodixDFU-umbrella.h"; sourceTree = "<group>"; };
 		7147A21D4202DDC00CC0AE958E3DA4D5 /* Map.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Map.swift; path = RxSwift/Observables/Map.swift; sourceTree = "<group>"; };
 		7216DA74DF7162A88C7BEE8781554DC3 /* NMBStringify.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = NMBStringify.h; path = Sources/NimbleObjectiveC/include/NMBStringify.h; sourceTree = "<group>"; };
+		724AC5252D6816840051ACD3 /* MMTToolForGoodixLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTToolForGoodixLog.swift; sourceTree = "<group>"; };
 		7265CF1E2D673152008C7FBD /* MMTToolForGoodixDFUToolUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MMTToolForGoodixDFUToolUnit.swift; path = MMTToolForGoodixDFU/Classes/MMTToolForGoodixDFUToolUnit.swift; sourceTree = "<group>"; };
 		7265CF202D6735A5008C7FBD /* MMTToolForGoodixDFUFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MMTToolForGoodixDFUFileManager.swift; path = MMTToolForGoodixDFU/Classes/MMTToolForGoodixDFUFileManager.swift; sourceTree = "<group>"; };
 		728476DBC420C452FB1B5E8B403C27CF /* QuickSpecBase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = QuickSpecBase.m; path = Sources/QuickObjCRuntime/QuickSpecBase.m; sourceTree = "<group>"; };
@@ -1652,6 +1654,7 @@
 				D25FF1BDC05E6AD17E5CB54C446A9833 /* MMTToolForGoodixDFUTool.swift */,
 				7265CF1E2D673152008C7FBD /* MMTToolForGoodixDFUToolUnit.swift */,
 				7265CF202D6735A5008C7FBD /* MMTToolForGoodixDFUFileManager.swift */,
+				724AC5252D6816840051ACD3 /* MMTToolForGoodixLog.swift */,
 				BC6763B4218E7C1076748A264B0785F6 /* GRDFUSDK2 */,
 				F5910967522C33C4EC5E2340C8DD4856 /* libcomx */,
 				B0C09406BC5CEB1411E574E6F37B45F3 /* Pod */,
@@ -3560,6 +3563,7 @@
 				ECACF4F55BCB6A45155FB9914C8D6512 /* FastDfu.swift in Sources */,
 				D139D4B3884493248B1109BA90952CC1 /* FastDfuProfile.swift in Sources */,
 				D1C573EE804B5BD71D0D7409C8F15BA1 /* GR5xxxDFU2.swift in Sources */,
+				724AC5262D6816840051ACD3 /* MMTToolForGoodixLog.swift in Sources */,
 				5BA21B0F4609A218E381DDA68A7EF356 /* GR5xxxFastDfu.swift in Sources */,
 				0EF71FB6BD5C867211F7B16F264A4AC2 /* GRDfuSdk2.docc in Sources */,
 				0AE3ADCC0B7B5497158F153D85AF3FDB /* HexHandler.swift in Sources */,

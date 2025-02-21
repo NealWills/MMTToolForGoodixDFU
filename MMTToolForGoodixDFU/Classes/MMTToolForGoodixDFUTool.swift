@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import MMTToolForBluetooth
+import CoreBluetooth
 
 class MMTToolForGoodixWeakDelegateUnit: NSObject {
     weak var weakDelegate: MMTToolForGoodixDFUDelegate?
@@ -21,14 +21,14 @@ public protocol MMTToolForGoodixDFUDelegate: NSObject {
     func mmtToolForGoodixUnitDidEnter(_ unit: MMTToolForGoodixDFUToolUnit?)
     func mmtToolForGoodixUnitDidFailToEnter(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?)
     func mmtToolForGoodixUnitDFUDidBegin(_ unit: MMTToolForGoodixDFUToolUnit?)
-    func mmtToolForGoodixUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFUToolUnit?)
+    func mmtToolForGoodixUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFUToolUnit?, progress: Int)
     func mmtToolForGoodixUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?)
     
     typealias DFUServerTurple = (
-        service: MMTService?,
-        readCharacter: MMTCharacteristic?,
-        writeCharacter: MMTCharacteristic?,
-        controlCharacter: MMTCharacteristic?
+        service: CBService?,
+        readCharacter: CBCharacteristic?,
+        writeCharacter: CBCharacteristic?,
+        controlCharacter: CBCharacteristic?
     )
     func mmtToolForGoodixUnitGetUUID(_ unit: MMTToolForGoodixDFUToolUnit?) -> DFUServerTurple?
     
@@ -44,17 +44,22 @@ public class MMTToolForGoodixDFUTool: NSObject {
         MMTToolForGoodixDFUFileManager.removeTempDir()
     }
     
-    public class func startDfu(device: MMTToolForBleDevice, startAddress: String?, filePath: String?) {
+    public class func startDfu(deviceUUID: String?, deviceMac: String?, deviceMacExtra: String?, peripheral: CBPeripheral?, startAddress: String?, filePath: String?) {
         let unit = MMTToolForGoodixDFUToolUnit.init()
         
-        guard let deviceMac = device.mac?.uppercased() else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDidFailToEnter(unit, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Device Not Exist"))
+        guard let deviceUUID = deviceUUID,
+              let deviceMac = deviceMac,
+              let deviceMacExtra = deviceMacExtra,
+              let peripheral = peripheral
+        else {
+            MMTToolForGoodixDFUTool.sendDelegateUnitDidFailToEnter(unit, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Not Exist"))
             return
         }
         
         unit.deviceMac = deviceMac.uppercased()
-        unit.deviceMacExtra = device.macExtra?.uppercased()
-        unit.deviceUUID = device.peripheral.identifier.uuidString.uppercased()
+        unit.deviceMacExtra = deviceMacExtra.uppercased()
+        unit.deviceUUID = deviceUUID
+        unit.localPeripheral = peripheral
         
         guard let filePath = filePath else {
             MMTToolForGoodixDFUTool.sendDelegateUnitDidFailToEnter(unit, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
@@ -80,7 +85,7 @@ public class MMTToolForGoodixDFUTool: NSObject {
         unit.startAddress = startAddress
         
         let isContain = MMTToolForGoodixDFUTool.share.unitList.contains(where: {
-            return $0.deviceMac?.uppercased() == device.mac?.uppercased()
+            return $0.deviceMac?.uppercased() == deviceMac.uppercased()
         }) ?? false
         if isContain {
             MMTToolForGoodixDFUTool.sendDelegateUnitDidFailToEnter(unit, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Unit Exist"))
@@ -111,7 +116,7 @@ public class MMTToolForGoodixDFUTool: NSObject {
         unit.localWriteCharacterUUID = writeCharacter.uuid.uuidString.uppercased()
         unit.localControlCharacterUUID = controlCharacter.uuid.uuidString.uppercased()
         unit.startTimeStamp = Date().timeIntervalSince1970
-        MMTToolForGoodixDFUTool.share.unitList.append(unit)
+//        MMTToolForGoodixDFUTool.share.unitList.append(unit)
         MMTToolForGoodixDFUTool.sendDelegateUnitDidEnter(unit)
         unit.startDfu()
     }
@@ -176,10 +181,10 @@ public extension MMTToolForGoodixDFUTool {
         })
     }
     
-    class func sendDelegateUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFUToolUnit?) {
+    class func sendDelegateUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFUToolUnit?, progress: Int) {
         let list = MMTToolForGoodixDFUTool.share.multiDelegateList
         list.forEach({
-            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidChangeProgress(unit)
+            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidChangeProgress(unit, progress: progress)
         })
     }
     
@@ -188,6 +193,16 @@ public extension MMTToolForGoodixDFUTool {
         list.forEach({
             $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(unit, error: error)
         })
+        
+        var unitId: String?
+        if let unit = unit {
+            let unitList = MMTToolForGoodixDFUTool.share.unitList.filter({
+                let idUnit = String.init(format: "%p", unit)
+                let idItem = String.init(format: "%p", $0)
+                return idUnit != idItem
+            })
+            MMTToolForGoodixDFUTool.share.unitList = unitList
+        }
     }
     
     class func sendDelegateUnitDFUGetUUID(_ unit: MMTToolForGoodixDFUToolUnit?) -> MMTToolForGoodixDFUDelegate.DFUServerTurple? {
