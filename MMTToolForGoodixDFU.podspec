@@ -41,7 +41,6 @@ This is a custom tool for mmt to upgrade the firmware of the goodix chip.
   # s.dependency 'AFNetworking', '~> 2.3'
   
   s.frameworks = 'CoreBluetooth'
-  s.dependency 'MMTToolForBluetooth'
 
 
 end
