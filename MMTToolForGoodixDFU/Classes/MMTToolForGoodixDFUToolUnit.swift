@@ -27,8 +27,38 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
         case dfuStart
         case dfuSuccess
         case dfuFailure
+        
+        var titleValue: String {
+            switch self {
+            case .normal:
+                return "normal"
+            case .sendDFUEnter:
+                return "sendDFUEnter"
+            case .dfuModeReady:
+                return "dfuModeReady"
+            case .dfuStart:
+                return "dfuStart"
+            case .dfuSuccess:
+                return "dfuSuccess"
+            case .dfuFailure:
+                return "dfuFailure"
+            }
+        }
     }
     var dfuStage: DFUStage = .normal
+    
+    public override var description: String {
+        get {
+            var title: String = "" + "〖"
+            title = title + " " + "id: " + String.init(format: "%p", self) + " " + " |"
+            title = title + " " + "deviceMac: " + "\(self.deviceMac ?? "")" + " " + " |"
+            title = title + " " + "deviceMac: " + "\(self.deviceMacExtra ?? "")" + " " + " |"
+            title = title + " " + "deviceMac: " + "\(self.deviceUUID ?? "")" + " " + " |"
+            title = title + " " + "dfuStatus: " + self.dfuStage.titleValue + " " + " |"
+            title = title + " 〗 "
+            return title
+        }
+    }
     
     public var startTimeStamp: TimeInterval = 0
     
@@ -225,35 +255,39 @@ extension MMTToolForGoodixDFUToolUnit: DfuListener {
         if self.dfuStage != .dfuModeReady { return }
         self.dfuStage = .dfuStart
         MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStart")
-        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
-            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidBegin(self)
-        })
+        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidBegin(self)
+//        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
+//            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidBegin(self)
+//        })
     }
     
     public func dfuProgress(msg: String, progress: Int) {
         if self.dfuStage != .dfuStart { return }
         MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuProgress progress: \(progress) msg: \(msg)")
-        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
-            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidChangeProgress(self, progress: progress)
-        })
+        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidChangeProgress(self, progress: progress)
+//        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
+//            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidChangeProgress(self, progress: progress)
+//        })
     }
     
     public func dfuComplete() {
         if self.dfuStage != .dfuStart { return }
         self.dfuStage = .dfuSuccess
         MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuComplete")
-        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
-            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
-        })
+        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: nil)
+//        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
+//            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
+//        })
     }
     
     public func dfuStopWithError(errorMsg: String) {
         if self.dfuStage != .dfuStart { return }
         self.dfuStage = .dfuFailure
         MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError \(errorMsg) ")
-        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
-            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
-        })
+        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: errorMsg))
+//        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
+//            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
+//        })
     }
     
 }
