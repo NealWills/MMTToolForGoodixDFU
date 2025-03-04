@@ -1,6 +1,6 @@
 {
   "name": "MMTToolForGoodixDFU",
-  "version": "0.1.0",
+  "version": "0.9.2",
   "summary": "MMT Tool For Goodix DFU.",
   "description": "This is a custom tool for mmt to upgrade the firmware of the goodix chip.",
   "homepage": "https://github.com/NealWills/MMTToolForGoodixDFU",
@@ -13,14 +13,11 @@
   },
   "source": {
     "git": "https://github.com/NealWills/MMTToolForGoodixDFU.git",
-    "tag": "0.1.0"
+    "tag": "0.9.2"
   },
   "platforms": {
     "ios": "13.0"
   },
   "source_files": "MMTToolForGoodixDFU/Classes/**/*",
-  "frameworks": "CoreBluetooth",
-  "dependencies": {
-    "MMTToolForBluetooth": []
-  }
+  "frameworks": "CoreBluetooth"
 }

@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -147,7 +147,6 @@ open class BlockingBLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                         prvDev.delegate = nil;
                     }
                 }
-                
                 self.central = bleManager
                 self.central!.delegate = self
                 self.targetDevice = device
@@ -184,6 +183,8 @@ open class BlockingBLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     public func connectPeripheral(timeout: Int,filter:@escaping ScanFilter)throws{
         if let device = try scanPeripheral(timeout: timeout, filter: filter){
             try connectPeripheral(targetDevice: device)
+        }else {
+            throw BlockingBleError.OtherError(msg: "connectPeripheral: failed to scan device")
         }
     }
     //查询连接状态

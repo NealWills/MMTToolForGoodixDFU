@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without

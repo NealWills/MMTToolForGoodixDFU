@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -38,29 +38,31 @@ public enum ComxLogLevel : Int{
     case ERROR = 6;
 }
 
+public protocol ComxLogRowProtocal{
+    func logRaw(timestamp:TimeInterval, _ level:ComxLogLevel, _ tag:String, _ msg:String, _ logStr:String?)
+}
+
 public protocol ComxLogProtocol {
     func v(_ tag: String, _ msg: String);
     func d(_ tag: String, _ msg: String);
     func i(_ tag: String, _ msg: String);
     func w(_ tag: String, _ msg: String);
     func e(_ tag: String, _ msg: String);
-
-    func logRaw(timestamp:TimeInterval, _ level:ComxLogLevel, _ tag:String, _ msg:String, _ logFromPreviousLogger:String?);
 }
 
-public class PrintLogger : ComxLogProtocol{
+open class PrintLogger : ComxLogProtocol, ComxLogRowProtocal{
     public var levelFilter = ComxLogLevel.INFO.rawValue;
     public var showThread = true;
-    public var nextLogger:ComxLogProtocol? = nil;
+    public var logRawListener:ComxLogRowProtocal? = nil;
     public let logDateFormatter = DateFormatter();
-    
+
     public init() {
         self.logDateFormatter.locale = Locale(identifier: "en_US_POSIX");
         self.logDateFormatter.timeZone = TimeZone.current;
         self.logDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
     }
-    
-    public func logRaw(timestamp: TimeInterval, _ level: ComxLogLevel, _ tag: String, _ msg: String, _ logFromPreviousLogger:String?) {
+
+    open func logRaw(timestamp: TimeInterval, _ level: ComxLogLevel, _ tag: String, _ msg: String, _ logFromPreviousLogger:String?) {
         var logStr:String;
         
         if level.rawValue < levelFilter {
@@ -106,8 +108,7 @@ public class PrintLogger : ComxLogProtocol{
         
         print(logStr);
         
-        // dilever
-        if let subLogger = nextLogger {
+        if let subLogger = logRawListener {
             subLogger.logRaw(timestamp: timestamp, level, tag, msg, logStr);
         }
     }

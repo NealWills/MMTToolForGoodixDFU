@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03ACCE66E876B1E8DC06A587 /* Pods_MMTToolForGoodixDFU_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2BA81F867EFAFDEE2D0283 /* Pods_MMTToolForGoodixDFU_Example.framework */; };
+		5CFC64F82D76EAD100458D19 /* dfuFile_1_0_0_18.bin in Resources */ = {isa = PBXBuildFile; fileRef = 5CFC64F72D76EAD100458D19 /* dfuFile_1_0_0_18.bin */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -40,6 +41,7 @@
 		587F5C3DC59692B1E96074A2 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		5A701E539ABFFA06267AD466 /* Pods-MMTToolForGoodixDFU_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MMTToolForGoodixDFU_Tests.release.xcconfig"; path = "Target Support Files/Pods-MMTToolForGoodixDFU_Tests/Pods-MMTToolForGoodixDFU_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		5B8FF96A3BD2255DCA83F050 /* Pods_MMTToolForGoodixDFU_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MMTToolForGoodixDFU_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CFC64F72D76EAD100458D19 /* dfuFile_1_0_0_18.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = dfuFile_1_0_0_18.bin; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* MMTToolForGoodixDFU_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMTToolForGoodixDFU_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				7265CF3C2D673A72008C7FBD /* dfuFile_1_0_0_17.bin */,
+				5CFC64F72D76EAD100458D19 /* dfuFile_1_0_0_18.bin */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -274,6 +277,7 @@
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				7265CF3D2D673A72008C7FBD /* dfuFile_1_0_0_17.bin in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				5CFC64F82D76EAD100458D19 /* dfuFile_1_0_0_18.bin in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

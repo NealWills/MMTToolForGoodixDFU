@@ -80,7 +80,7 @@ class ViewController: UIViewController {
         if deviceList.count <= indexPath.row { return }
         let device = deviceList[indexPath.row]
         if device.connectStatus != .connected { return }
-        let fileUrl = Bundle.main.path(forResource: "dfuFile_1_0_0_17.bin", ofType: "")
+        let fileUrl = Bundle.main.path(forResource: "dfuFile_1_0_0_18.bin", ofType: "")
         MMTToolForGoodixDFUTool.startDfu(deviceUUID: device.uuid, deviceMac: device.mac, deviceMacExtra: device.macExtra, peripheral: device.peripheral, startAddress: "01080000", filePath: fileUrl)
 //        MMTToolForGoodixDFUTool.startDfu(device: device, startAddress: "01080000", filePath: fileUrl)
     }

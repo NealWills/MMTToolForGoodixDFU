@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@ import Foundation
 import CoreBluetooth
 
 public class EasyDfu2{
+    private var workThread:Thread? = nil
     private var log:ComxLogProtocol = PrintLogger()
     //配置参数
     private var listener:DfuListener? = nil
@@ -51,6 +52,13 @@ public class EasyDfu2{
     public func setListener(listener:DfuListener){
         self.listener=listener
     }
+
+    public func setLogListener(listener:ComxLogRowProtocal){
+        if let defaultLog = log as? PrintLogger{
+            defaultLog.logRawListener = listener
+        }
+    }
+
     //接口函数
     public func startDfu(central:CBCentralManager?, target: CBPeripheral, dfuData:Data){
         launchDfu(central: central, targetDevice: target, dfuMode: 0, dfuData: dfuData, address: 0, isExtFlash: false)
@@ -61,11 +69,13 @@ public class EasyDfu2{
     public func startResourceUpdate(central:CBCentralManager?, target: CBPeripheral, dfuData:Data, extFlash:Bool, startAddr:UInt32){
         launchDfu(central: central, targetDevice: target, dfuMode: 2, dfuData: dfuData, address: startAddr, isExtFlash: extFlash)
     }
+    public func startDfuWithDfuBoot(central:CBCentralManager?, target: CBPeripheral, dfuData:Data){
+        launchDfu(central: central, targetDevice: target, dfuMode: 3, dfuData: dfuData, address: 0, isExtFlash: false)
+    }
 
-    
     //dfu任务
     private func launchDfu(central:CBCentralManager?, targetDevice: CBPeripheral, dfuMode:Int, dfuData:Data,address:UInt32, isExtFlash:Bool){
-        let workThread = Thread{
+        workThread = Thread{
             let gr5xxxDfu2: GR5xxxDFU2 = GR5xxxDFU2()
             let blockBle = BlockingBLE()
             do{
@@ -82,6 +92,22 @@ public class EasyDfu2{
                     try gr5xxxDfu2.updateFirmware(dfuData: dfuData, isCopyMode: true, copyAddress: address, isFastMode: self.isFastMode, listener: self.listener, ctrlCmd: self.ctrlCmd)
                 }else if dfuMode == 2{
                     try gr5xxxDfu2.updateResource(dfuData: dfuData, startAddress: address, isFastMode: self.isFastMode, isExtFlash: isExtFlash, listener: self.listener, ctrlCmd: self.ctrlCmd)
+                }else if dfuMode == 3{
+                    //发送命令跳转到Boot模式，并重连设备（BOOT模式）
+                    try gr5xxxDfu2.setDfuEnter()
+                    Thread.sleep(forTimeInterval: 0.2)
+                    try blockBle.disconnectPeripheral()
+                    Thread.sleep(forTimeInterval: 0.2)
+                    if let filter = self.reconnectScanFilter {
+                        try blockBle.connectPeripheral(timeout: 10_000, filter: filter)
+                    }else{
+                        //警告：因IOS不能取得蓝牙地址，所以重连时是依据DFU BOOT模式时的默认设备名连接的，这里是不可靠的。
+                        try blockBle.connectPeripheral(timeout: 10_000, deviceName: "Goodix_DFU")
+                    }
+                    try blockBle.discoverServices()
+                    try gr5xxxDfu2.bondTo(blockingBle: blockBle)
+                    
+                    try gr5xxxDfu2.updateFirmware(dfuData: dfuData, isCopyMode: false, copyAddress: 0, isFastMode: self.isFastMode, listener: self.listener, ctrlCmd: self.ctrlCmd, reconnectScanFilter: nil)
                 }
                 
                 try blockBle.disconnectPeripheral()
@@ -95,17 +121,17 @@ public class EasyDfu2{
             }
             catch BlockingBleError.TimeOut(let msg){
                 DispatchQueue.main.async {
-                    self.listener?.dfuStopWithError(errorMsg: msg);
+                    self.listener?.dfuStopWithError(errorMsg: msg.isEmpty ? "communication timeout" : msg);
                 }
             }
             catch BlockingBleError.DisConnect(let msg){
                 DispatchQueue.main.async {
-                    self.listener?.dfuStopWithError(errorMsg: msg);
+                    self.listener?.dfuStopWithError(errorMsg: msg.isEmpty ? "disconnect error" : msg);
                 }
             }
             catch BlockingBleError.OtherError(let msg){
                 DispatchQueue.main.async {
-                    self.listener?.dfuStopWithError(errorMsg: msg);
+                    self.listener?.dfuStopWithError(errorMsg: msg.isEmpty ? "unknown other error" : msg);
                 }
             }
             catch {
@@ -114,7 +140,15 @@ public class EasyDfu2{
                 }
             }
         }
-        workThread.name = "dfuThread"
-        workThread.start()
+        workThread!.name = "dfuThread"
+        workThread!.start()
+    }
+    
+    public func cancel(){
+        if let thread = workThread {
+            if (!thread.isCancelled){
+                thread.cancel()
+            }
+        }
     }
 }

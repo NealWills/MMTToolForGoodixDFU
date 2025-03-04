@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@ import Foundation
 import CoreBluetooth
 
 public class FastDfuProfile{
-    
     public let svcUUID = "a6ed0701-d344-460a-8075-b9e8ec90d71b";
     public let deviceCmdUUID = "a6ed0702-d344-460a-8075-b9e8ec90d71b";
     public let deviceDatUUID = "a6ed0703-d344-460a-8075-b9e8ec90d71b";

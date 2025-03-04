@@ -27,6 +27,7 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
         case dfuStart
         case dfuSuccess
         case dfuFailure
+        case dfuCancel
         
         var titleValue: String {
             switch self {
@@ -42,6 +43,8 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
                 return "dfuSuccess"
             case .dfuFailure:
                 return "dfuFailure"
+            case .dfuCancel:
+                return "dfuCancel"
             }
         }
     }
@@ -250,6 +253,14 @@ extension MMTToolForGoodixDFUToolUnit {
 }
 
 extension MMTToolForGoodixDFUToolUnit: DfuListener {
+    
+    public func dfuCancelled(progress: Int) {
+        if self.dfuStage != .dfuStart { return }
+        self.dfuStage = .dfuFailure
+        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError DFU Cancel ")
+        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Cancel"))
+    }
+    
     
     public func dfuStart() {
         if self.dfuStage != .dfuModeReady { return }

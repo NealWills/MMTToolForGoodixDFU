@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -106,6 +106,18 @@ public class GR5xxxDFU2: DfuProfile2{
         if resp != 1{
             throw ErrorMsg.error(msg: "getBootInfo: Command response error.")
         }
+
+        let op = data.get(size: 1)
+        let addr = data.get(size: 4)
+        let len = data.get(size: 2)
+        if (addr != scaStartAddress){
+            throw ErrorMsg.error(msg: "getBootInfo: unexpected address")
+        }
+        if (len != 24){
+            throw ErrorMsg.error(msg: "getBootInfo: unexpected data length")
+        }
+        res.peerEncrypted = ((op & 0xf0) != 0x00)
+
         data.pos=12
         res.bootInfo = Imginfo(data: data.getData(size: 24))
         
@@ -155,9 +167,17 @@ public class GR5xxxDFU2: DfuProfile2{
         let data = HexHandler(copy: recvCmd)
         data.pos = 4
         let resp = data.get(size: 1)
-        if resp != 1{
+        if resp != 1 {
             throw ErrorMsg.error(msg: "getImgList: Command response error.")
         }
+#if true
+        let op = data.get(size: 1)
+        let addr = data.get(size: 4)
+        if (addr != (scaStartAddress + 0x40)){
+            throw ErrorMsg.error(msg: "getImgList: unexpected address")
+        }
+        res.peerEncrypted = ((op & 0xf0) != 0x00)
+#endif
         
         data.pos=10
         let len = data.get(size: 2)
@@ -256,7 +276,7 @@ public class GR5xxxDFU2: DfuProfile2{
             try sendCmd(param: cmd.buffer)
         }
     }
-    public func programStart(dfuMode:Int, dfuFw:FirmwareAndResource, address:UInt32, isExFlash:Bool) throws{// todo
+    public func programStart(dfuMode:Int, dfuFw:FirmwareAndResource, address:UInt32, isExFlash:Bool, dfuVersion: UInt32 = 0x00) throws{// todo
         self.log?.d("GR5xxxDFU2", "programStart: start")
         let cmd_code: UInt32 = CmdCode.PROGRAM_START
         let cmdLength = dfuMode == 2 ? 9 : 41 // todo dfuMode enum
@@ -273,7 +293,9 @@ public class GR5xxxDFU2: DfuProfile2{
             if dfuFw.isFirmware{
                 var byte_6: UInt32 = 0
                 byte_6 = isExFlash ? 0x01 : 0x00
-                byte_6 |= dfuFw.fwEncryptAndSignState << 4
+                if (dfuVersion >= 0x02){
+                    byte_6 |= dfuFw.fwEncryptAndSignState << 4
+                }
                 cmd.put(size: 1, uint32: byte_6)
                 if dfuMode == 0{
                     cmd.put(size: 40, data: dfuFw.fwbootInfo!.serialize())
@@ -298,7 +320,7 @@ public class GR5xxxDFU2: DfuProfile2{
             throw ErrorMsg.error(msg: "programStart: Command response error.")
         }
     }
-    public func programStartFast(dfuMode:Int, dfuFw:FirmwareAndResource, address:UInt32, isExFlash:Bool) throws{
+    public func programStartFast(dfuMode:Int, dfuFw:FirmwareAndResource, address:UInt32, isExFlash:Bool, dfuVersion: UInt32 = 0x00) throws{
         self.log?.d("GR5xxxDFU2", "programStartFast: start")
         let cmd_code: UInt32 = CmdCode.PROGRAM_START
         let cmdLength = dfuMode == 2 ? 9 : 41
@@ -314,7 +336,9 @@ public class GR5xxxDFU2: DfuProfile2{
         else if(dfuMode == 0 || dfuMode == 1){
             var byte_6: UInt32 = 0
             byte_6 = isExFlash ? 0x03 : 0x02
-            byte_6 |= dfuFw.fwEncryptAndSignState << 4
+            if (dfuVersion >= 0x02){
+                byte_6 |= dfuFw.fwEncryptAndSignState << 4
+            }
             cmd.put(size: 1, uint32: byte_6)
             if dfuMode == 0{
                 cmd.put(size: 40, data: dfuFw.fwbootInfo!.serialize())
@@ -503,7 +527,14 @@ public class GR5xxxDFU2: DfuProfile2{
         db.appInfo = nil
         //旧版dfu
         db.imgList = nil
-        
+
+        if (!(db.fwFile?.isFirmware ?? false)){
+            DispatchQueue.main.async {
+                listener?.dfuStopWithError(errorMsg: "Can't find image infomation data.");
+            }
+            throw ErrorMsg.error(msg: "Can't find image infomation data.")
+        }
+
         //run
         DispatchQueue.main.async {
             listener?.dfuStart();
@@ -513,7 +544,7 @@ public class GR5xxxDFU2: DfuProfile2{
             //发送dfuenter指令，防止固件端dfu任务未启动
             try setDfuEnter()
             //获取各种固件端信息
-            progress(listener, "DFU information preparation...", 2)
+            progress(listener, "Loading device info...", 0)
             let getChipInfoRes:GetChipInfoRes = try getChipInfo()
             db.dfuVersion = getChipInfoRes.dfuVersion
             db.scaStartAddress = getChipInfoRes.scaStartAddress
@@ -526,7 +557,7 @@ public class GR5xxxDFU2: DfuProfile2{
             db.appInfo = getExtraInfoRes.appInfo
             
             //覆盖检查
-            progress(listener, "Coverage checking...", 4)
+            progress(listener, "Checking memory coverage...", 0)
             try checkOverlapNew(db: db)
             
             //加密状态匹配检查
@@ -535,7 +566,7 @@ public class GR5xxxDFU2: DfuProfile2{
             //设置dfu mode、重连设备
             if db.dfuMode == 0 && db.position == 0x01{
                 try setDfuMode(dfuMode: db.dfuMode)
-                progress(listener, "Jumping...", 5)
+                progress(listener, "Jumping to boot mode...", 5)
                 Thread.sleep(forTimeInterval: 0.2)
                 try self.blockBle?.disconnectPeripheral()
                 Thread.sleep(forTimeInterval: 0.2)
@@ -552,20 +583,35 @@ public class GR5xxxDFU2: DfuProfile2{
             }
             else if db.dfuMode == 1{
                 try setDfuMode(dfuMode: db.dfuMode)
+                Thread.sleep(forTimeInterval: 0.5)
             }
             
             //下载数据
-            progress(listener, "Downloading...", 5)
+            progress(listener, "Downloading...", 0)
             if db.isFastMode{
-                try programStartFast(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: false)
+                try programStartFast(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: false, dfuVersion: db.dfuVersion)
                 try programFlashFast(dfuFw: db.fwFile!, listener: { progress in
-                    self.progress(listener, "Downloading...", progress)
+                    if (Thread.current.isCancelled){
+                        DispatchQueue.main.async {
+                            listener?.dfuCancelled(progress: progress)
+                        }
+                        Thread.exit()
+                    }else {
+                        self.progress(listener, "Downloading...", progress)
+                    }
                 })
             }
             else{
-                try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address,isExFlash: false)
+                try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address,isExFlash: false,dfuVersion: db.dfuVersion)
                 try programFlash(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: false,listener: { progress in
-                    self.progress(listener, "Downloading...", progress)
+                    if (Thread.current.isCancelled){
+                        DispatchQueue.main.async {
+                            listener?.dfuCancelled(progress: progress)
+                        }
+                        Thread.exit()
+                    }else {
+                        self.progress(listener, "Downloading...", progress)
+                    }
                 })
             }
             try programEnd(dfuMode: db.dfuMode, dfuFw: db.fwFile!, dfuVersion: Int(db.dfuVersion), isExFlash: db.isExFlash, isFastMode: db.isFastMode)
@@ -576,7 +622,7 @@ public class GR5xxxDFU2: DfuProfile2{
             try self.writeCtrPoint(ctrCmd: ctrlCmd)
             
             //获取各种固件端信息
-            progress(listener, "DFU information preparation...", 2)
+            progress(listener, "Loading device info...", 0)
             let getChipInfoRes:GetChipInfoRes = try getChipInfo()
             db.dfuVersion = getChipInfoRes.dfuVersion
             db.scaStartAddress = getChipInfoRes.scaStartAddress
@@ -588,21 +634,28 @@ public class GR5xxxDFU2: DfuProfile2{
             db.imgList = getImgListRes.imgList
             
             //覆盖检查
-            progress(listener, "Coverage checking...", 4)
+            progress(listener, "Checking memory coverage...", 0)
             try checkOverlapOld(db: db)
             
             //加密状态匹配检查
             try checkEncryptMath(dfuDatabase: db)
-            
+
             //imglist整理
-            progress(listener, "imglist arranging...", 5)
+            progress(listener, "Arranging image list...", 5)
             try tidyImgList(targetBootInfo: db.fwFile!.fwbootInfo!, bootInfo: db.bootInfo!, imgList: db.imgList!, scaStartAddress: db.scaStartAddress)
-            
+
             //下载数据
             progress(listener, "Downloading...", 0)
-            try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash)
+            try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash, dfuVersion: db.dfuVersion)
             try programFlash(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: false,listener: { progress in
-                self.progress(listener, "Downloading...", progress)
+                if (Thread.current.isCancelled){
+                    DispatchQueue.main.async {
+                        listener?.dfuCancelled(progress: progress)
+                    }
+                    Thread.exit()
+                }else {
+                    self.progress(listener, "Downloading...", progress)
+                }
             })
             try programEnd(dfuMode: db.dfuMode, dfuFw: db.fwFile!, dfuVersion: Int(db.dfuVersion),isExFlash: db.isExFlash, isFastMode: db.isFastMode)
             progress(listener, "Downloading...", 100)
@@ -640,7 +693,7 @@ public class GR5xxxDFU2: DfuProfile2{
             //发送dfuenter指令，防止固件端dfu任务未启动
             try setDfuEnter()
             //获取各种固件端信息
-            progress(listener, "DFU information preparation...", 2)
+            progress(listener, "Loading device info...", 0)
             let getChipInfoRes:GetChipInfoRes = try getChipInfo()
             db.dfuVersion = getChipInfoRes.dfuVersion
             db.scaStartAddress = getChipInfoRes.scaStartAddress
@@ -653,32 +706,46 @@ public class GR5xxxDFU2: DfuProfile2{
             db.appInfo = getExtraInfoRes.appInfo
             
             //覆盖检查
-            progress(listener, "Coverage checking...", 4)
+            progress(listener, "Checking memory coverage...", 0)
             try checkOverlapNew(db: db)
             
             //下载数据
-            progress(listener, "Downloading...", 6)
+            progress(listener, "Downloading...", 0)
             if db.isFastMode{
-                try programStartFast(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash)
+                try programStartFast(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash, dfuVersion: db.dfuVersion)
                 try programFlashFast(dfuFw: db.fwFile!, listener: { progress in
-                    self.progress(listener, "Downloading...", progress)
+                    if (Thread.current.isCancelled){
+                        DispatchQueue.main.async {
+                            listener?.dfuCancelled(progress: progress)
+                        }
+                        Thread.exit()
+                    }else {
+                        self.progress(listener, "Downloading...", progress)
+                    }
                 })
             }
             else{
-                try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash)
+                try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash, dfuVersion:db.dfuVersion)
                 try programFlash(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash,listener: { progress in
-                    self.progress(listener, "Downloading...", progress)
+                    if (Thread.current.isCancelled){
+                        DispatchQueue.main.async {
+                            listener?.dfuCancelled(progress: progress)
+                        }
+                        Thread.exit()
+                    }else {
+                        self.progress(listener, "Downloading...", progress)
+                    }
                 })
             }
             try programEnd(dfuMode: db.dfuMode, dfuFw: db.fwFile!, dfuVersion: Int(db.dfuVersion), isExFlash: db.isExFlash, isFastMode: db.isFastMode)
-            progress(listener, "Downloading...", 100)
+            progress(listener, "DFU Completed", 100)
         }
         else{
             //写控制点，用于发送控制指令，该指令用于启动固件端DFU任务（固件端带rtos时），该指令内容用户可自定义
             try self.writeCtrPoint(ctrCmd: ctrlCmd)
             
             //获取各种固件端信息
-            progress(listener, "DFU information preparation...", 2)
+            progress(listener, "Loading device info...", 0)
             let getChipInfoRes:GetChipInfoRes = try getChipInfo()
             db.dfuVersion = getChipInfoRes.dfuVersion
             db.scaStartAddress = getChipInfoRes.scaStartAddress
@@ -688,16 +755,23 @@ public class GR5xxxDFU2: DfuProfile2{
             let getImgListRes:GetImgListRes = try getImgList(scaStartAddress: db.scaStartAddress)
             db.peerEncrypted = getImgListRes.peerEncrypted
             db.imgList = getImgListRes.imgList
-            
+
             //覆盖检查
-            progress(listener, "Coverage checking...", 4)
+            progress(listener, "Checking memory coverage...", 0)
             try checkOverlapOld(db: db)
-            
+    
             //下载数据
             progress(listener, "Downloading...", 0)
-            try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address,isExFlash: db.isExFlash)
-            try programFlash(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: false,listener: { progress in
-                self.progress(listener, "Downloading...", progress)
+            try programStart(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address,isExFlash: db.isExFlash, dfuVersion: db.dfuVersion)
+            try programFlash(dfuMode: db.dfuMode, dfuFw: db.fwFile!, address: db.address, isExFlash: db.isExFlash,listener: { progress in
+                if (Thread.current.isCancelled){
+                    DispatchQueue.main.async {
+                        listener?.dfuCancelled(progress: progress)
+                    }
+                    Thread.exit()
+                }else {
+                    self.progress(listener, "Downloading...", progress)
+                }
             })
             try programEnd(dfuMode: db.dfuMode, dfuFw: db.fwFile!, dfuVersion: Int(db.dfuVersion), isExFlash: db.isExFlash, isFastMode: db.isFastMode)
             progress(listener, "Downloading...", 100)
@@ -710,28 +784,38 @@ public class GR5xxxDFU2: DfuProfile2{
     //tool
     private func checkOverlapNew(db: GR5xxxDFU2.DfuDatabase) throws{
         var targetArea: MemoryArea?
-        if db.dfuMode == 0 || db.dfuMode == 1{
+        if db.dfuMode == 0 || db.dfuMode == 1{ //upgrade firmware
             targetArea = MemoryArea("targetArea", db.fwFile!.fwbootInfo!.loadAddr, UInt32(db.fwFile!.frData!.count))
-        }else if db.dfuMode == 2{
+        }else if db.dfuMode == 2{ //upgrade resource
             targetArea = MemoryArea("targetArea", db.address, UInt32(db.fwFile!.frData!.count))
         }
         let scaArea: MemoryArea? = MemoryArea("scaArea", db.scaStartAddress, 0x0000_2000)
         let bootArea: MemoryArea? = MemoryArea("bootArea", db.bootInfo!.loadAddr, db.bootInfo!.appSize+48+856)
-        let appArea: MemoryArea? = MemoryArea("appArea", db.appInfo!.loadAddr, db.appInfo!.appSize+48+856)
-        
-        
+        var appArea: MemoryArea?
+        if let availAppInfo = db.appInfo{
+            if (availAppInfo.isAvailable){
+                appArea = MemoryArea("appArea", availAppInfo.loadAddr, availAppInfo.appSize + 48 + 856)
+            }
+        }
+
         try MemoryArea.memoryOverlapCheck(src: scaArea!, dst: targetArea!)
         try MemoryArea.memoryOverlapCheck(src: bootArea!, dst: targetArea!)
         
-        if db.dfuMode == 1{
+        if db.dfuMode == 1{ //upgrade firmware with copy mode
             let copyArea: MemoryArea? = MemoryArea("copyArea", db.address, UInt32(db.fwFile!.frData!.count))
             try MemoryArea.memoryOverlapCheck(src: targetArea!, dst: copyArea!)
             try MemoryArea.memoryOverlapCheck(src: scaArea!, dst: copyArea!)
             try MemoryArea.memoryOverlapCheck(src: bootArea!, dst: copyArea!)
-            try MemoryArea.memoryOverlapCheck(src: appArea!, dst: copyArea!)
+            if let availAppArea = appArea {
+                try MemoryArea.memoryOverlapCheck(src: availAppArea, dst: copyArea!)
+            }
         }
-        else if db.dfuMode == 2{
-            try MemoryArea.memoryOverlapCheck(src: appArea!, dst: targetArea!)
+        else if db.dfuMode == 2{ //upgrade resource
+            if !db.isExFlash{
+                if let availAppArea = appArea {
+                    try MemoryArea.memoryOverlapCheck(src: availAppArea, dst: targetArea!)
+                }
+            }
         }
     }
     private func checkOverlapOld(db: GR5xxxDFU2.DfuDatabase) throws{
@@ -848,7 +932,7 @@ public class GR5xxxDFU2: DfuProfile2{
                 self.comment = "bootinfo"
                 self.isAvailable = true
             }
-            else if data.count == 40{
+            else if data.count >= 40{
                 let info = HexHandler(copy:data)
                 self.pattern = UInt32(info.get(size: 2))
                 self.version = UInt32(info.get(size: 2))

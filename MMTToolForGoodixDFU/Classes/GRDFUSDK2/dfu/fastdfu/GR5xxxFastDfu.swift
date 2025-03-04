@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -223,6 +223,12 @@ public class GR5xxxFastDfu:FastDfuProfile{
         }
         Thread.sleep(forTimeInterval: 1)
     }
+
+    public func memoryOverlap(_ srcStart:UInt32, _ srcSize:UInt32, _ dstStart:UInt32, _ dstSize:UInt32) -> Bool{
+        let dstEnd:UInt32 = dstStart + dstSize
+        let srcEnd:UInt32 = srcStart + srcSize
+        return srcEnd > dstStart && srcStart < dstEnd
+    }
     
     //fast dfu流程
     public func updateFwRes(dfuMode:UInt32, dfuData:Data, address:UInt32, extFlash:Bool, listener:DfuListener? = nil) throws{
@@ -233,30 +239,53 @@ public class GR5xxxFastDfu:FastDfuProfile{
         fastDfuDatabase.isExFlash = extFlash
         fastDfuDatabase.fastDfuVersion = 0
         fastDfuDatabase.bufferSize = 0
-        
-        DispatchQueue.main.async {
-            listener?.dfuProgress(msg: "DFU信息准备...", progress: 2);
+
+        if (0 == dfuMode || 1 == dfuMode){ // 0 or 1 means Firmware, 2 means Resource
+            if (!(fastDfuDatabase.fwFile?.isFirmware ?? false)){
+                throw ErrorMsg.error(msg: "Can't find image infomation data.")
+            }
+
+            if (dfuMode == 1){ // 1 means copy mode
+                if ((fastDfuDatabase.fwFile?.fwbootInfo?.hasOverlap(dstStart: address, dstSize: UInt32(dfuData.count))) == true){
+                    throw ErrorMsg.error(msg: "updateFwRes error with address overlapped")
+                }
+            }
         }
+
+        DispatchQueue.main.async {
+            listener?.dfuProgress(msg: "Loading device info...", progress: 0);
+        }
+
         fastDfuDatabase.fastDfuVersion = try getFastDfuVersion()
         try selectAimFlash(isExFlash: fastDfuDatabase.isExFlash)
         fastDfuDatabase.bufferSize = try getBufferSize(fastDfuVersion: fastDfuDatabase.fastDfuVersion)
         DispatchQueue.main.async {
-            listener?.dfuProgress(msg: "Flash擦除...", progress: 4);
+            listener?.dfuProgress(msg: "Erasing flash...", progress: 0);
         }
         try eraseFlash(dfuMode: fastDfuDatabase.dfuMode, fwFile: fastDfuDatabase.fwFile!, address: fastDfuDatabase.address)
         DispatchQueue.main.async {
-            listener?.dfuProgress(msg: "下载数据...", progress: 5);
+            listener?.dfuProgress(msg: "Downloading...", progress: 0);
         }
         try downloadData(fastDfuVersion: fastDfuDatabase.fastDfuVersion, fwFile: fastDfuDatabase.fwFile!, bufferSize: fastDfuDatabase.bufferSize,listener: { progress in
-            DispatchQueue.main.async {
-                listener?.dfuProgress(msg: "下载完成，断开连接...", progress: progress);
+            if (Thread.current.isCancelled){
+                DispatchQueue.main.async {
+                    listener?.dfuCancelled(progress: progress)
+                }
+                Thread.exit()
+            }else {
+                DispatchQueue.main.async {
+                    listener?.dfuProgress(msg: "Downloading...", progress: progress);
+                }
             }
         })
         
+        // compat GR5515 SDK V1.6.12. BALPRO-3092.
+        Thread.sleep(forTimeInterval: 0.2)
+
         try checkChecksum(fwFile: fastDfuDatabase.fwFile!)
         try postprogressing(dfuMode: fastDfuDatabase.dfuMode, fwFile: fastDfuDatabase.fwFile!, address: fastDfuDatabase.address)
         DispatchQueue.main.async {
-            listener?.dfuProgress(msg: "下载完成，断开连接...", progress: 100);
+            listener?.dfuProgress(msg: "DFU Completed", progress: 100);
         }
         DispatchQueue.main.async {
             listener?.dfuComplete();
@@ -376,6 +405,16 @@ public class GR5xxxFastDfu:FastDfuProfile{
             }else{
                 return outList
             }
+        }
+
+        public static func memoryOverlap(_ srcStart:UInt32, _ srcSize:UInt32, _ dstStart:UInt32, _ dstSize:UInt32) -> Bool{
+            let dstEnd:UInt32 = dstStart + dstSize
+            let srcEnd:UInt32 = srcStart + srcSize
+            return srcEnd > dstStart && srcStart < dstEnd
+        }
+        
+        public func hasOverlap(dstStart: UInt32, dstSize: UInt32) ->Bool{
+            return GR5xxxFastDfu.Imginfo.memoryOverlap(loadAddr, appSize, dstStart, dstSize);
         }
     }
     public class FirmwareAndResource{

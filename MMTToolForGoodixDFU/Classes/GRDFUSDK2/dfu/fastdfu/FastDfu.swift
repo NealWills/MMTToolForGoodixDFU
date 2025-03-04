@@ -1,6 +1,6 @@
 /**
  *****************************************************************************************
-  Copyright (c) 2019 GOODIX
+  Copyright (c) 2023 GOODIX
   All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,12 +32,21 @@ import Foundation
 import CoreBluetooth
 
 public class FastDfu{
+    private var workThread:Thread? = nil
+
     //配置参数
     private var listener:DfuListener? = nil
+    private var log:ComxLogProtocol = PrintLogger()
+    
     //配置函数
     public init(){}
     public func setListener(listener:DfuListener){
         self.listener=listener
+    }
+    public func setLogListener(listener:ComxLogRowProtocal){
+        if let defaultLog = log as? PrintLogger{
+            defaultLog.logRawListener = listener
+        }
     }
     //接口函数
     public func startDfu(central:CBCentralManager?, target: CBPeripheral, dfuData:Data){
@@ -51,10 +60,11 @@ public class FastDfu{
     }
     //任务函数
     private func launchDfu(central:CBCentralManager?, targetDevice: CBPeripheral, dfuMode:UInt32, dfuData:Data,address:UInt32, isExtFlash:Bool){
-        let workThread = Thread{
+        workThread = Thread{
             let gr5xxxFastDfu: GR5xxxFastDfu = GR5xxxFastDfu()
             let blockBle = BlockingBLE()
             do{
+                blockBle.setLog(log: self.log)
                 try blockBle.initCentral(central)
                 try blockBle.connectPeripheral(targetDevice: targetDevice)
                 try blockBle.discoverServices()
@@ -92,7 +102,15 @@ public class FastDfu{
                 }
             }
         }
-        workThread.name = "dfuThread"
-        workThread.start()
+        workThread?.name = "dfuThread"
+        workThread?.start()
+    }
+
+    public func cancel(){
+        if let thread = workThread {
+            if (!thread.isCancelled){
+                thread.cancel()
+            }
+        }
     }
 }
