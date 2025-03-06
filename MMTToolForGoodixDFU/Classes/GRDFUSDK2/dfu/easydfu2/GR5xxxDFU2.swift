@@ -535,6 +535,14 @@ public class GR5xxxDFU2: DfuProfile2{
             throw ErrorMsg.error(msg: "Can't find image infomation data.")
         }
 
+        guard let file = db.fwFile else {
+            DispatchQueue.main.async {
+                listener?.dfuStopWithError(errorMsg: "Can't find image infomation data.")
+            }
+            Thread.exit()
+            return
+        }
+        
         //run
         DispatchQueue.main.async {
             listener?.dfuStart();
@@ -639,6 +647,11 @@ public class GR5xxxDFU2: DfuProfile2{
             
             //加密状态匹配检查
             try checkEncryptMath(dfuDatabase: db)
+            
+            guard let fwFile = db.fwFile, let bootInfo = db.bootInfo, let imgList = db.imgList else {
+                throw ErrorMsg.error(msg: "Can't find image infomation data.")
+                return
+            }
 
             //imglist整理
             progress(listener, "Arranging image list...", 5)

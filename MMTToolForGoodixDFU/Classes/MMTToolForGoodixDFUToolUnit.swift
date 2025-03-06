@@ -259,6 +259,9 @@ extension MMTToolForGoodixDFUToolUnit: DfuListener {
         self.dfuStage = .dfuFailure
         MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError DFU Cancel ")
         MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Cancel"))
+        if let peripheral = self.peripheral {
+            self.manager?.cancelPeripheralConnection(peripheral)
+        }
     }
     
     
@@ -289,6 +292,9 @@ extension MMTToolForGoodixDFUToolUnit: DfuListener {
 //        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
 //            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
 //        })
+        if let peripheral = self.peripheral {
+            self.manager?.cancelPeripheralConnection(peripheral)
+        }
     }
     
     public func dfuStopWithError(errorMsg: String) {
@@ -299,6 +305,9 @@ extension MMTToolForGoodixDFUToolUnit: DfuListener {
 //        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
 //            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
 //        })
+        if let peripheral = self.peripheral {
+            self.manager?.cancelPeripheralConnection(peripheral)
+        }
     }
     
 }

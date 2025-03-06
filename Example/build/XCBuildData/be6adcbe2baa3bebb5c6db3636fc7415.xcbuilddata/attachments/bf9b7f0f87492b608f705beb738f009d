@@ -1,5 +1,0 @@
- extern const unsigned char CwlMachBadInstructionHandlerVersionString[];
- extern const double CwlMachBadInstructionHandlerVersionNumber;
-
- const unsigned char CwlMachBadInstructionHandlerVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:CwlMachBadInstructionHandler  PROJECT:Pods-1" "\n";
- const double CwlMachBadInstructionHandlerVersionNumber __attribute__ ((used)) = (double)1.;
