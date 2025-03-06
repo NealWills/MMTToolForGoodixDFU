@@ -28,7 +28,7 @@ This is a custom tool for mmt to upgrade the firmware of the goodix chip.
   s.source           = { :git => 'https://github.com/NealWills/MMTToolForGoodixDFU.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '11.0'
 
   s.source_files = 'MMTToolForGoodixDFU/Classes/**/*'
   
