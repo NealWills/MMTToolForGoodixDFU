@@ -398,7 +398,7 @@ open class BlockingBLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                     let hexString = frame.map{String(format: "%02hhx", $0)}.joined()
                     device.writeValue(frame, for: chr, type: type);
                     if type == CBCharacteristicWriteType.withResponse{
-                        let res = try result.waitResult(targetCodes: [Result.WRITE_CHAR], timeout: 1_000)
+                        let res = try result.waitResult(targetCodes: [Result.WRITE_CHAR], timeout: 10_000)
                         if res.resultCode == Result.WRITE_CHAR{
                             if !res.resultSuccess{
                                 throw BlockingBleError.OtherError(msg: "writeCharacteristic: Writing Characteristic failed.")
