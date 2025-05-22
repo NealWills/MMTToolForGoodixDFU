@@ -128,7 +128,7 @@ public class DfuProfile2{
     public func recvCmd(opcode:UInt32) throws -> Data {
         if let bb = blockBle{
             if let chr = tx {
-                let head = try bb.readNotification(chr: chr, byteCount: 6, timeoutMS: 3_000)
+                let head = try bb.readNotification(chr: chr, byteCount: 6, timeoutMS: 10_000)
                 if head.count != 6 {
                     throw ErrorMsg.error(msg: "recvCmd: Cmd head receive failed.")
                 }
@@ -141,7 +141,7 @@ public class DfuProfile2{
                 let cmdCode: Int = Int(headHex.get(size: 2))
                 let cmdLength: Int = Int(headHex.get(size: 2))
                 let cmdOut = HexHandler(4+cmdLength)
-                let cmdDate = try bb.readNotification(chr: chr, byteCount: cmdLength+2, timeoutMS: 3_000)
+                let cmdDate = try bb.readNotification(chr: chr, byteCount: cmdLength+2, timeoutMS: 10_000)
                 if (cmdLength+2) != cmdDate.count
                 {
                     throw ErrorMsg.error(msg: "recvCmd: Cmd body receive failed.")
