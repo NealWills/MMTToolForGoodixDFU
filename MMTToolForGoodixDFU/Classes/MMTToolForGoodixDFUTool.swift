@@ -22,7 +22,7 @@ public protocol MMTToolForGoodixDFUDelegate: NSObject {
     func mmtToolForGoodixUnitDidFailToEnter(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?)
     func mmtToolForGoodixUnitDFUDidBegin(_ unit: MMTToolForGoodixDFUToolUnit?)
     func mmtToolForGoodixUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFUToolUnit?, progress: Int)
-    func mmtToolForGoodixUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?)
+    func mmtToolForGoodixUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, progress: Int?, error: Error?)
     func mmtToolForGoodixUnitDidShowErrorMessage(_ unit: MMTToolForGoodixDFUToolUnit?, stage: String?, error: Error?)
     
     typealias DFUServerTurple = (
@@ -139,14 +139,14 @@ public class MMTToolForGoodixDFUTool: NSObject {
             }
         }
         
-        unit.resultBlock = { unitId, error in
+        unit.resultBlock = { unitId, progress, error in
             if let toolUnit = MMTToolForGoodixDFUTool.share.unitList.first(where: {
                 return $0.unitId == unitId
             }) {
                 
                 MMTToolForGoodixLog.log("[MMTToolForGoodixLog] sendDelegateUnitDFUDidEnd error: \(error)", level: .info)
                 
-                MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(toolUnit, error: error)
+                MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(toolUnit, progress: progress, error: error)
                 
                 toolUnit.destroyUnit()
                 
@@ -229,10 +229,10 @@ public extension MMTToolForGoodixDFUTool {
         
     }
     
-    class func sendDelegateUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?) {
+    class func sendDelegateUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, progress: Int?, error: Error?) {
         let list = MMTToolForGoodixDFUTool.share.multiDelegateList
         list.forEach({
-            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(unit, error: error)
+            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(unit, progress: progress, error: error)
         })
         
     }

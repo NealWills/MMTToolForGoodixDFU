@@ -127,9 +127,9 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
         self.destroyTimer()
     }
     
-    var stepBlock: ((String?, String)->())?
-    var progressBlock: ((String?, Int)->())?
-    var resultBlock: ((String?, NSError?)->())?
+    var stepBlock: ((_ unitId: String?, _ stage: String)->())?
+    var progressBlock: ((_ unitId: String?, _ progress: Int)->())?
+    var resultBlock: ((_ unitId: String?, _ progress: Int?, _ error: NSError?)->())?
     var dfuErrorMsgBlock: ((_ unitId: String?, _ errorMsg: String, _ stage: String)->())?
     
 }
@@ -144,14 +144,14 @@ extension MMTToolForGoodixDFUToolUnit {
             return $0.uuid.uuidString.uppercased() == self.localServiceUUID
         }) else {
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Service Not Exist")
-            self.resultBlock?(self.unitId, error)
+            self.resultBlock?(self.unitId, 0, error)
             return
         }
         guard let controlCharacter = service.characteristics?.first(where: {
             return $0.uuid.uuidString.uppercased() == self.localControlCharacterUUID?.uppercased()
         }) else {
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device ControlCharacter Not Exist")
-            self.resultBlock?(self.unitId, error)
+            self.resultBlock?(self.unitId, 0, error)
             return
         }
         
@@ -159,18 +159,18 @@ extension MMTToolForGoodixDFUToolUnit {
               let address = UInt32(startAddressStr, radix:16)
         else {
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist")
-            self.resultBlock?(self.unitId, error)
+            self.resultBlock?(self.unitId, 0, error)
             return
         }
         guard let dfuFilePath = self.dfuFilePath else {
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
-            self.resultBlock?(self.unitId, error)
+            self.resultBlock?(self.unitId, 0, error)
             return
         }
         let url = URL.init(fileURLWithPath: dfuFilePath)
         guard let fileData = try? Data(contentsOf: url) else {
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
-            self.resultBlock?(self.unitId, error)
+            self.resultBlock?(self.unitId, 0, error)
             return
         }
         
@@ -213,7 +213,7 @@ extension MMTToolForGoodixDFUToolUnit {
 //            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist"))
 //            MMTToolForGoodixDFUTool.share.unitList.remove(self)
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist")
-            resultBlock?(self.unitId, error)
+            resultBlock?(self.unitId, 0, error)
             return
         }
         guard let dfuFilePath = self.dfuFilePath else {
@@ -221,7 +221,7 @@ extension MMTToolForGoodixDFUToolUnit {
 //            MMTToolForGoodixDFUTool.share.unitList.append(self)
             
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
-            resultBlock?(self.unitId, error)
+            resultBlock?(self.unitId, 0, error)
             return
         }
         let url = URL.init(fileURLWithPath: dfuFilePath)
@@ -230,7 +230,7 @@ extension MMTToolForGoodixDFUToolUnit {
 //            MMTToolForGoodixDFUTool.share.unitList.append(self)
             
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
-            resultBlock?(self.unitId, error)
+            resultBlock?(self.unitId, 0, error)
             
             return
         }
@@ -240,7 +240,7 @@ extension MMTToolForGoodixDFUToolUnit {
 //            MMTToolForGoodixDFUTool.share.unitList.append(self)
             
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Not Found")
-            resultBlock?(self.unitId, error)
+            resultBlock?(self.unitId, 0, error)
             
             return
         }
@@ -290,7 +290,7 @@ extension MMTToolForGoodixDFUToolUnit {
             let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "dfu stop with error: DFU time out")
             self.easyDfu2?.cancel()
             self.destroyTimer()
-            resultBlock?(self.unitId, error)
+            resultBlock?(self.unitId, self.currentProgress, error)
         }
     }
     
@@ -407,7 +407,7 @@ extension MMTToolForGoodixDFUToolUnit: DfuListener {
         }
         self.destroyTimer()
         
-        self.resultBlock?(self.unitId, nil)
+        self.resultBlock?(self.unitId, self.currentProgress, nil)
     }
     
     public func dfuStopWithError(errorMsg: String) {
