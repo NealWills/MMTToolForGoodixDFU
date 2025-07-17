@@ -11,6 +11,8 @@ import CoreBluetooth
 
 public class MMTToolForGoodixDFUToolUnit: NSObject {
     
+    var unitId: String = UUID().uuidString
+    
     public enum DFUStatus {
         case prepare
         case progress(_ current: Int, _ total: Int)
@@ -71,7 +73,7 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
     
     public var deviceUUID: String?
     
-    weak var delegate: MMTToolForGoodixDFUDelegate?
+//    weak var delegate: MMTToolForGoodixDFUDelegate?
     
     var startAddress: String?
     
@@ -101,6 +103,11 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
     
     fileprivate var peripheral: CBPeripheral?
     
+    var timer: Timer?
+    var timerValidTimestamp: TimeInterval = 0
+    
+    var currentProgress: Int = 0
+    
     func startDfu() {
         
         self.dfuStage = .normal
@@ -113,6 +120,18 @@ public class MMTToolForGoodixDFUToolUnit: NSObject {
         self.dfuStep01()
     }
     
+    func destroyUnit() {
+        self.manager?.delegate = nil
+        self.manager = nil
+        self.easyDfu2 = EasyDfu2.init()
+        self.destroyTimer()
+    }
+    
+    var stepBlock: ((String?, String)->())?
+    var progressBlock: ((String?, Int)->())?
+    var resultBlock: ((String?, NSError?)->())?
+    var dfuErrorMsgBlock: ((_ unitId: String?, _ errorMsg: String, _ stage: String)->())?
+    
 }
 
 extension MMTToolForGoodixDFUToolUnit {
@@ -124,39 +143,42 @@ extension MMTToolForGoodixDFUToolUnit {
         guard let service = self.localPeripheral?.services?.first(where: {
             return $0.uuid.uuidString.uppercased() == self.localServiceUUID
         }) else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Service Not Exist"))
-//            GoodixLog.share.unitList.append(self)
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Service Not Exist")
+            self.resultBlock?(self.unitId, error)
             return
         }
         guard let controlCharacter = service.characteristics?.first(where: {
             return $0.uuid.uuidString.uppercased() == self.localControlCharacterUUID?.uppercased()
         }) else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device ControlCharacter Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device ControlCharacter Not Exist")
+            self.resultBlock?(self.unitId, error)
             return
         }
         
         guard let startAddressStr = self.startAddress,
               let address = UInt32(startAddressStr, radix:16)
         else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist")
+            self.resultBlock?(self.unitId, error)
             return
         }
         guard let dfuFilePath = self.dfuFilePath else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
+            self.resultBlock?(self.unitId, error)
             return
         }
         let url = URL.init(fileURLWithPath: dfuFilePath)
         guard let fileData = try? Data(contentsOf: url) else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
+            self.resultBlock?(self.unitId, error)
             return
         }
         
+        self.stepBlock?(self.unitId, "Dfu step01 [0x44, 0x4f, 0x4f, 0x47] send")
+        
         localPeripheral?.writeValue(Data([0x44, 0x4f, 0x4f, 0x47]), for: controlCharacter, type: .withoutResponse)
         
+        self.stepBlock?(self.unitId, "Dfu step01 stop scan")
         self.manager?.stopScan()
         self.manager = nil
         self.peripheral = nil
@@ -164,12 +186,11 @@ extension MMTToolForGoodixDFUToolUnit {
         self.manager = CBCentralManager()
         self.manager?.delegate = self
         
-        MMTToolForGoodixDFUTool.share.unitList.append(self)
-        
         self.dfuStage = .sendDFUEnter
         
         DispatchQueue(label: "com.mmt.sdk.goodix").asyncAfter(deadline: .now() + 1, execute: {
-            self.manager?.scanForPeripherals(withServices: nil)
+            self.stepBlock?(self.unitId, "Dfu step01 start scan")
+            self.manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
         })
         
 //        device.writeData(data: [0x44, 0x4f, 0x4f, 0x47], character: controlCharacter, type: .withoutResponse)
@@ -183,131 +204,229 @@ extension MMTToolForGoodixDFUToolUnit {
         if self.dfuStage != .sendDFUEnter {
             return
         }
+        self.stepBlock?(self.unitId, "Dfu step02 enter")
         self.dfuStage = .dfuModeReady
         
         guard let startAddressStr = self.startAddress,
               let address = UInt32(startAddressStr, radix:16)
         else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist"))
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist"))
 //            MMTToolForGoodixDFUTool.share.unitList.remove(self)
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist")
+            resultBlock?(self.unitId, error)
             return
         }
         guard let dfuFilePath = self.dfuFilePath else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
 //            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
+            resultBlock?(self.unitId, error)
             return
         }
         let url = URL.init(fileURLWithPath: dfuFilePath)
         guard let fileData = try? Data(contentsOf: url) else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
 //            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist")
+            resultBlock?(self.unitId, error)
+            
             return
         }
         
         guard let peripheral = self.peripheral else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Not Found"))
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Not Found"))
 //            MMTToolForGoodixDFUTool.share.unitList.append(self)
+            
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Device Not Found")
+            resultBlock?(self.unitId, error)
+            
             return
         }
+        
+        self.stepBlock?(self.unitId, "Dfu step02 init easy dfu2")
+        self.dfuStage = .dfuStart
      
         self.easyDfu2 = EasyDfu2.init()
         self.easyDfu2?.setFastMode(isFastMode: false)
         self.easyDfu2?.setListener(listener: self)
+        self.easyDfu2?.setReconnectScanFilter { [weak self] peripheral, advertisementData, rssi in
+            if let macData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
+                let macList = macData.map({
+                    return String.init(format: "%02x", $0).uppercased()
+                })
+                var mac = macList.joined(separator: ":")
+                var macExtra: String?
+                if macList.count > 6 {
+                    mac = macList[0..<6].joined(separator: ":")
+                    macExtra = macList[6..<macList.count].joined(separator: ":")
+                }
+                if mac.uppercased() == self?.deviceMac?.uppercased() {
+                    return true
+                }
+                return false
+            }
+            return false
+        }
+        
+        self.stepBlock?(self.unitId, "Dfu step02 dfu2 startDfuInCopyMode")
+        
         self.easyDfu2?.startDfuInCopyMode(central: self.manager, target: peripheral, dfuData: fileData, copyAddr: address)
+        
+        self.currentProgress = 0
+        self.stepBlock?(self.unitId, "Dfu step02 dfu2 start timer")
+        
+        self.timer?.invalidate()
+        self.timer = nil
+        self.timerValidTimestamp = Date().timeIntervalSince1970
+        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerAction(_:)), userInfo: nil, repeats: true)
     }
     
-    func dfuStep02(peripheral: CBPeripheral) {
-        
-        if self.dfuStage != .sendDFUEnter {
-            return
+    @objc func timerAction(_ sender: Any) {
+        let currentDate = Date()
+        let distance = currentDate.timeIntervalSince1970 - self.timerValidTimestamp
+        if distance > 30 {
+            let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "dfu stop with error: DFU time out")
+            self.easyDfu2?.cancel()
+            self.destroyTimer()
+            resultBlock?(self.unitId, error)
         }
-        
-        guard let startAddressStr = self.startAddress,
-              let address = UInt32(startAddressStr, radix:16)
-        else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.remove(self)
-            return
-        }
-        guard let dfuFilePath = self.dfuFilePath else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.append(self)
-            return
-        }
-        let url = URL.init(fileURLWithPath: dfuFilePath)
-        guard let fileData = try? Data(contentsOf: url) else {
-            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
-//            MMTToolForGoodixDFUTool.share.unitList.append(self)
-            return
-        }
-        
-        
-        self.dfuStage = .dfuModeReady
-     
-        self.easyDfu2 = EasyDfu2.init()
-        self.easyDfu2?.setFastMode(isFastMode: false)
-        self.easyDfu2?.setListener(listener: self)
-        self.easyDfu2?.startDfuInCopyMode(central: nil, target: peripheral, dfuData: fileData, copyAddr: address)
     }
+    
+    func destroyTimer() {
+        
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+    
+//    func dfuStep02(peripheral: CBPeripheral) {
+//        
+//        if self.dfuStage != .sendDFUEnter {
+//            return
+//        }
+//        
+//        guard let startAddressStr = self.startAddress,
+//              let address = UInt32(startAddressStr, radix:16)
+//        else {
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "Start Address Not Exist"))
+////            MMTToolForGoodixDFUTool.share.unitList.remove(self)
+//            return
+//        }
+//        guard let dfuFilePath = self.dfuFilePath else {
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
+////            MMTToolForGoodixDFUTool.share.unitList.append(self)
+//            return
+//        }
+//        let url = URL.init(fileURLWithPath: dfuFilePath)
+//        guard let fileData = try? Data(contentsOf: url) else {
+//            MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU File Not Exist"))
+////            MMTToolForGoodixDFUTool.share.unitList.append(self)
+//            return
+//        }
+//        
+//        
+//        self.dfuStage = .dfuModeReady
+//     
+//        self.easyDfu2 = EasyDfu2.init()
+//        self.easyDfu2?.setFastMode(isFastMode: false)
+//        self.easyDfu2?.setListener(listener: self)
+//        self.easyDfu2?.startDfuInCopyMode(central: nil, target: peripheral, dfuData: fileData, copyAddr: address)
+//    }
     
 }
 
 extension MMTToolForGoodixDFUToolUnit: DfuListener {
     
     public func dfuCancelled(progress: Int) {
-        if self.dfuStage != .dfuStart { return }
-        self.dfuStage = .dfuFailure
-        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError DFU Cancel ")
-        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Cancel"))
-        if let peripheral = self.peripheral {
-            self.manager?.cancelPeripheralConnection(peripheral)
-        }
+        
+//        self.destroyTimer()
+//        if let peripheral = self.peripheral {
+//            self.manager?.cancelPeripheralConnection(peripheral)
+//        }
+//        
+//        let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "dfu stop with error: DFU Cancel")
+//        resultBlock?(self.unitId, error)
+        
+//        if self.dfuStage != .dfuStart { return }
+//        self.dfuStage = .dfuFailure
+//        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError DFU Cancel ")
+//        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: "DFU Cancel"))
+//        if let peripheral = self.peripheral {
+//            self.manager?.cancelPeripheralConnection(peripheral)
+//        }
     }
     
     
     public func dfuStart() {
-        if self.dfuStage != .dfuModeReady { return }
-        self.dfuStage = .dfuStart
-        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStart")
-        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidBegin(self)
+        
+        self.timerValidTimestamp = Date().timeIntervalSince1970
+        if self.currentProgress < 1 {
+            self.currentProgress = 1
+        }
+        self.progressBlock?(self.unitId, self.currentProgress)
+//
+//        if self.dfuStage != .dfuModeReady { return }
+//        self.dfuStage = .dfuStart
+//        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStart")
+//        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidBegin(self)
 //        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
 //            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidBegin(self)
 //        })
     }
     
     public func dfuProgress(msg: String, progress: Int) {
-        if self.dfuStage != .dfuStart { return }
-        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuProgress progress: \(progress) msg: \(msg)")
-        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidChangeProgress(self, progress: progress)
+        self.timerValidTimestamp = Date().timeIntervalSince1970
+        if self.currentProgress < progress {
+            self.currentProgress = progress
+        }
+        self.progressBlock?(self.unitId, self.currentProgress)
+//        if self.dfuStage != .dfuStart { return }
+//        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuProgress progress: \(progress) msg: \(msg)")
+//        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidChangeProgress(self, progress: progress)
 //        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
 //            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidChangeProgress(self, progress: progress)
 //        })
     }
     
     public func dfuComplete() {
-        if self.dfuStage != .dfuStart { return }
-        self.dfuStage = .dfuSuccess
-        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuComplete")
-        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: nil)
+        
+        self.timerValidTimestamp = Date().timeIntervalSince1970
+        
+        self.currentProgress = 100
+        
+//        if self.dfuStage != .dfuStart { return }
+//        self.dfuStage = .dfuSuccess
+//        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuComplete")
+//        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: nil)
 //        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
 //            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
 //        })
         if let peripheral = self.peripheral {
             self.manager?.cancelPeripheralConnection(peripheral)
         }
+        self.destroyTimer()
+        
+        self.resultBlock?(self.unitId, nil)
     }
     
     public func dfuStopWithError(errorMsg: String) {
-        if self.dfuStage != .dfuStart { return }
-        self.dfuStage = .dfuFailure
-        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError \(errorMsg) ")
-        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: errorMsg))
-//        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
-//            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
-//        })
-        if let peripheral = self.peripheral {
-            self.manager?.cancelPeripheralConnection(peripheral)
+        
+        if self.currentProgress < 1 {
+            self.dfuErrorMsgBlock?(self.unitId, errorMsg, "DFU Wait Start")
+        } else {
+            self.dfuErrorMsgBlock?(self.unitId, errorMsg, "DFU Did Start")
         }
+//        if self.dfuStage != .dfuStart { return }
+//        self.dfuStage = .dfuFailure
+//        MMTGoodixLog.debug.log("[MMTToolForGoodixDFUToolUnit] dfuStopWithError \(errorMsg) ")
+//        MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(self, error: MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: errorMsg))
+////        MMTToolForGoodixDFUTool.share.multiDelegateList.forEach({
+////            $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(self, error: nil)
+////        })
+//        if let peripheral = self.peripheral {
+//            self.manager?.cancelPeripheralConnection(peripheral)
+//        }
     }
     
 }
@@ -346,6 +465,10 @@ extension MMTToolForGoodixDFUToolUnit: CBCentralManagerDelegate {
             }
             if mac.uppercased() == self.deviceMac?.uppercased() {
                 self.peripheral = peripheral
+                
+                self.stepBlock?(self.unitId, "Dfu step01 device scan success")
+                self.stepBlock?(self.unitId, "Dfu step01 device scan success than end scan")
+                
                 central.stopScan()
                 self.dfuStep02()
             }

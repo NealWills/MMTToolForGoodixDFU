@@ -23,6 +23,7 @@ public protocol MMTToolForGoodixDFUDelegate: NSObject {
     func mmtToolForGoodixUnitDFUDidBegin(_ unit: MMTToolForGoodixDFUToolUnit?)
     func mmtToolForGoodixUnitDFUDidChangeProgress(_ unit: MMTToolForGoodixDFUToolUnit?, progress: Int)
     func mmtToolForGoodixUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?)
+    func mmtToolForGoodixUnitDidShowErrorMessage(_ unit: MMTToolForGoodixDFUToolUnit?, stage: String?, error: Error?)
     
     typealias DFUServerTurple = (
         service: CBService?,
@@ -116,9 +117,48 @@ public class MMTToolForGoodixDFUTool: NSObject {
         unit.localWriteCharacterUUID = writeCharacter.uuid.uuidString.uppercased()
         unit.localControlCharacterUUID = controlCharacter.uuid.uuidString.uppercased()
         unit.startTimeStamp = Date().timeIntervalSince1970
-//        MMTToolForGoodixDFUTool.share.unitList.append(unit)
+        MMTToolForGoodixDFUTool.share.unitList.append(unit)
         MMTToolForGoodixDFUTool.sendDelegateUnitDidEnter(unit)
+        
+        unit.dfuErrorMsgBlock = { unitId, msg, stage in
+            if let toolUnit = MMTToolForGoodixDFUTool.share.unitList.first(where: {
+                return $0.unitId == unitId
+            }) {
+//                MMTToolForGoodixLog.log("[MMTToolForGoodixLog] sendDelegateUnitDFUDidChangeProgress progress: \(progress)", level: .info)
+                let error = MMTToolForGoodixDFUTool.createError(code: -1, localDescrip: msg)
+                MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidShowErrorMessage(unit, stage: stage, error: error)
+            }
+        }
+        
+        unit.progressBlock = { unitId, progress in
+            if let toolUnit = MMTToolForGoodixDFUTool.share.unitList.first(where: {
+                return $0.unitId == unitId
+            }) {
+                MMTToolForGoodixLog.log("[MMTToolForGoodixLog] sendDelegateUnitDFUDidChangeProgress progress: \(progress)", level: .info)
+                MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidChangeProgress(toolUnit, progress: progress)
+            }
+        }
+        
+        unit.resultBlock = { unitId, error in
+            if let toolUnit = MMTToolForGoodixDFUTool.share.unitList.first(where: {
+                return $0.unitId == unitId
+            }) {
+                
+                MMTToolForGoodixLog.log("[MMTToolForGoodixLog] sendDelegateUnitDFUDidEnd error: \(error)", level: .info)
+                
+                MMTToolForGoodixDFUTool.sendDelegateUnitDFUDidEnd(toolUnit, error: error)
+                
+                toolUnit.destroyUnit()
+                
+                MMTToolForGoodixDFUTool.share.unitList.removeAll {
+                    return $0.unitId == unitId
+                }
+            }
+        }
+        
         unit.startDfu()
+        
+        MMTToolForGoodixLog.log("[MEOTAGoodixManager] mmtToolForGoodixUnit Did Start DFU")
     }
     
 }
@@ -186,6 +226,7 @@ public extension MMTToolForGoodixDFUTool {
         list.forEach({
             $0.weakDelegate?.mmtToolForGoodixUnitDFUDidChangeProgress(unit, progress: progress)
         })
+        
     }
     
     class func sendDelegateUnitDFUDidEnd(_ unit: MMTToolForGoodixDFUToolUnit?, error: Error?) {
@@ -194,15 +235,14 @@ public extension MMTToolForGoodixDFUTool {
             $0.weakDelegate?.mmtToolForGoodixUnitDFUDidEnd(unit, error: error)
         })
         
-        var unitId: String?
-        if let unit = unit {
-            let unitList = MMTToolForGoodixDFUTool.share.unitList.filter({
-                let idUnit = String.init(format: "%p", unit)
-                let idItem = String.init(format: "%p", $0)
-                return idUnit != idItem
-            })
-            MMTToolForGoodixDFUTool.share.unitList = unitList
-        }
+    }
+    
+    class func sendDelegateUnitDFUDidShowErrorMessage(_ unit: MMTToolForGoodixDFUToolUnit?, stage: String?, error: Error?) {
+        let list = MMTToolForGoodixDFUTool.share.multiDelegateList
+        list.forEach({
+            $0.weakDelegate?.mmtToolForGoodixUnitDidShowErrorMessage(unit, stage: stage, error: error)
+        })
+        
     }
     
     class func sendDelegateUnitDFUGetUUID(_ unit: MMTToolForGoodixDFUToolUnit?) -> MMTToolForGoodixDFUDelegate.DFUServerTurple? {

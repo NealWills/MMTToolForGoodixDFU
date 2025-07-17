@@ -139,7 +139,7 @@ open class BlockingBLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         }
     }
     //连接
-    public func connectPeripheral(targetDevice:CBPeripheral?)throws{
+    public func connectPeripheral(targetDevice:CBPeripheral?, tryCount: Int = 0)throws{
         if let bleManager = self.central{
             if let device = targetDevice{
                 if let prvDev = self.targetDevice {
@@ -158,7 +158,15 @@ open class BlockingBLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                     if res.resultSuccess{
                         return
                     }else{
-                        throw BlockingBleError.OtherError(msg: "connectPeripheral: Connecting device failed.")
+                        if tryCount <= 3 {
+                            do {
+                                try self.connectPeripheral(targetDevice: targetDevice, tryCount: tryCount + 1)
+                            } catch let error {
+                                throw BlockingBleError.OtherError(msg: "connectPeripheral: Connecting device failed.")
+                            }
+                        } else {
+                            throw BlockingBleError.OtherError(msg: "connectPeripheral: Connecting device failed.")
+                        }
                     }
                 }
             }else{
